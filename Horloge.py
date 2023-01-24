@@ -33,10 +33,10 @@ def heure_actuel():
 
     while True:
         datetime.now().time()  # prend l'heure actuel
-        date = str(datetime.now().time())  # on met l'heure actuel sous frome de str pour pouvoir enlever le micro
+        date = str(datetime.now().time())  # on met l'heure actuel sous forme de str pour pouvoir enlever le micro
         # seconde par la suite
         date = date[:-7]  # on enlève les micro seconde le l'heure actuel  #
-        print(date)
+        print('\r', date, end='')
         pause()
 
 
@@ -97,8 +97,14 @@ def afficher_heure(heure_affichage):
         if minute == 60:
             minute = 0
             heure = heure + 1
+            heure_de_reference = heure_de_reference + 1
+
         if heure == 24:
             heure = 0
+
+        if heure_de_reference == 24:
+            heure_de_reference = 0
+
 
         # mettre les valeurs en str pour affichage 00
         seconde = str(seconde)
@@ -135,10 +141,10 @@ def afficher_heure(heure_affichage):
 
                 # savoir si c'est AM ou PM
                 if heure_de_reference >= 12:
-                    print(heure + ":" + minute + ":" + seconde + "PM")
+                    print('\r', heure + ":" + minute + ":" + seconde + "PM", end='')
 
                 if heure_de_reference < 12:
-                    print(heure + ":" + minute + ":" + seconde + "AM")
+                    print('\r', heure + ":" + minute + ":" + seconde + "AM", end='')
 
         # condition pour afficher heure sous forme 24h
         if choix_mode_affichage == "1":
@@ -148,7 +154,7 @@ def afficher_heure(heure_affichage):
                 heure.insert(0, '0')
                 heure = "".join(heure)
             # affichage de l'haure
-            print(str(heure) + ':' + str(minute) + ':' + str(seconde))
+            print('\r', str(heure) + ':' + str(minute) + ':' + str(seconde), end='')
 
         # remettre les valeurs en int pour que la boucle recommence
         seconde = int(seconde)
@@ -209,16 +215,22 @@ def pause():
 
     while running:
         time.sleep(1)  # actualise toute les 1 seconde
-        if keyboard.is_pressed("delete"):  # si touche presser
-            print("Pause")
+
+        if keyboard.is_pressed("backspace") and display == True:  # si touche presser
+            print("\nPause")
             if block == False:
                 display = not display
                 block = True
                 print('Appuyer sur la touche delete pour reprendre.')
+
+        elif keyboard.is_pressed("backspace") and display == False:
+            display = not display
+            block = True
+            print('restart')
         else:
-            block = False  # permet de remetre la fcontion if si on remet pause
+            block = False  # permet de remettre la fonction if si on remet en pause
         if display:
-            return  # retourne a la focntion affier_heure si la touche n'est pas pressé
+            return  # retourne a la fonction afficher_heure si la touche n'est pas pressé
 
 
 # fonction menu
